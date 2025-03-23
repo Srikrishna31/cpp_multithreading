@@ -24,7 +24,7 @@ TEST_F(TimerShould, SubscribeCallbackButDontStartTimer)
     SetUp(2);
     timer_->SubscribeTimerCallback([&counter]() { counter++; }, 4);
 
-    ASSERT_EQ(counter, 0);
+    EXPECT_EQ(counter, 0);
 }
 
 TEST_F(TimerShould, SubscribeCallbackAndVerifyCounterValue)
@@ -52,7 +52,7 @@ TEST_F(TimerShould, SubscribeCallbackAndVerifyCounterValue)
     auto ulk = std::unique_lock{dummy_lock};
     cv.wait(ulk);
 
-    ASSERT_EQ(counter, expected);
+    EXPECT_EQ(counter, expected);
 }
 
 TEST_F(TimerShould, SubscribeTwoCallbacksAndVerifyCounterValues)
@@ -144,7 +144,7 @@ TEST_F(TimerShould, SubscribeAndStopShouldStopCallback)
 
     timer_->Stop();
 
-    ASSERT_FALSE(callback_called_after_stop);
+    EXPECT_FALSE(callback_called_after_stop);
 }
 
 int main(int argc, char** argv)

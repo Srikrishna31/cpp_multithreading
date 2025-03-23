@@ -1,17 +1,15 @@
-load("@//:config.bzl", "platform_config", "package_copt")
-
-platform_config()
+load("@//:config.bzl", "package_copt")
 
 cc_library(
     name = "timer",
-    hdrs = [
-        "include/timer.h"
-    ],
     srcs = [
         "src/timer.cpp",
     ],
-    strip_include_prefix = "include",
+    hdrs = [
+        "include/timer.h",
+    ],
     copts = package_copt,
+    strip_include_prefix = "include",
     visibility = ["//visibility:public"],
 )
 
@@ -20,9 +18,9 @@ cc_test(
     srcs = ["test/test_timer.cpp"],
     copts = package_copt,
     tags = ["unit"],
+    visibility = ["//visibility:private"],
     deps = [
         ":timer",
-        "@gtest//:gtest",
+        "@gtest",
     ],
-    visibility = ["//visibility:private"]
 )
