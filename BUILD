@@ -13,6 +13,19 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_library(
+    name = "spinlock",
+    srcs = [
+        "src/atomic/spinlock.cpp",
+    ],
+    hdrs = [
+        "include/atomic/spinlock.h",
+    ],
+    copts = package_copt,
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
