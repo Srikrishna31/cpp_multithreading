@@ -22,14 +22,11 @@ struct Token
 
 }  // namespace timer
 
-namespace std
-{
 template <>
-struct hash<timer::Token>
+struct std::hash<timer::Token>
 {
-    auto operator()(const timer::Token& val) const { return val.time_point.time_since_epoch().count(); }
-};
-}  // namespace std
+    auto operator()(const timer::Token& val) const noexcept { return val.time_point.time_since_epoch().count(); }
+};  // namespace std
 
 namespace timer_internal
 {
@@ -43,7 +40,7 @@ struct Data
     timer::time_ms elapsed_time_;
     const timer::time_ms tick_duration_ms_;
 
-    Data(timer::time_ms tick_duration_ms)
+    explicit Data(const timer::time_ms tick_duration_ms)
         : callback_list_lock_{},
           callbacks_{},
           stop_{false},
@@ -59,18 +56,18 @@ struct Data
 
 namespace timer
 {
-Timer::Timer(time_ms duration) : data_{std::make_unique<timer_internal::Data>(duration)} {}
+Timer::Timer(time_ms tick_duration_ms) : data_{std::make_unique<timer_internal::Data>(tick_duration_ms)} {}
 
 // Move constructor is needed to be implemented since
 // we are using a forward declaration of Data.
-Timer::Timer(Timer&& that) : data_{std::move(that.data_)} {}
+Timer::Timer(Timer&& that) noexcept : data_{std::move(that.data_)} {}
 
 Timer::~Timer()
 {
     Stop();
 }
 
-auto Timer::SubscribeTimerCallback(timer_callback_t callback, time_ms frequency) -> const Token&
+auto Timer::SubscribeTimerCallback(timer_callback_t callback, time_ms frequency) const -> const Token&
 {
     const auto tok = Token{std::chrono::high_resolution_clock::now()};
     auto ulk = std::scoped_lock(data_->callback_list_lock_);
@@ -79,14 +76,14 @@ auto Timer::SubscribeTimerCallback(timer_callback_t callback, time_ms frequency)
     return data_->callbacks_.find(tok)->first;
 }
 
-auto Timer::UnsubscribeTimerCallback(const Token& token) -> bool
+auto Timer::UnsubscribeTimerCallback(const Token& token) const -> bool
 {
     auto ulk = std::scoped_lock(data_->callback_list_lock_);
 
     return data_->callbacks_.erase(token) == 1;
 }
 
-auto Timer::Start() -> void
+auto Timer::Start() const -> void
 {
     if (data_->timer_thread_fut_.valid())
     {
@@ -135,7 +132,7 @@ auto Timer::Start() -> void
     });
 }
 
-auto Timer::Stop() -> void
+auto Timer::Stop() const -> void
 {
     // The check for the presence of data is needed,
     // since when the move constructor resets the data to null,
@@ -148,7 +145,7 @@ auto Timer::Stop() -> void
     }
 }
 
-auto WaitForDuration(int64_t wait_duration_ms) -> void
+auto WaitForDuration(const int64_t wait_duration_ms) -> void
 {
     std::condition_variable cv{};
     std::mutex lock {};
