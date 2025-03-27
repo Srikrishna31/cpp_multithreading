@@ -7,13 +7,19 @@
 #include <atomic>
 
 /**
- * Each of the operations on the atomic types has an optional memory-ordering argument that can be used to specify the
- * required memory-ordering semantics:
- *      * Store operations, which can have memory_order_relaxed, memory_order_release or memory_order_seq_cst ordering.
- *      * Load operations, which can have memory_order_relaxed, memory_order_consume, memory_order_acquire, or
- *      memory_order_seq_cst ordering.
- *      * Read-modify-write operations, which can have memory_order_relaxed, memory_order_consume, memory_order_acquire,
- *      memory_order_release, memory_order_acq_rel, or memory_order_seq_cst ordering.
+ * std::atomic_flag is the simplest standard atomic type, which represents a Boolean flag. Objects of this type can be
+ * in one of two states: set or clear. Objects of type std::atomic_flag must be initialized with ATOMIC_FLAG_INIT. This
+ * initializes the flag to a clear state. There's no choice in this matter: the flag always starts clear. It's the only
+ * atomic type to require such special treatment for initialization, but it's also the only type guaranteed to be lock-free.
+ * Once you have your flag object initialized, there are only three things you can do with it: destroy it, clear it, or
+ * set it and query the previous value.
+ *
+ * You can't copy-construct another std::atomic object from the first, and you can't assign one std::atomic object to
+ * another. All operations on an atomic type are defined as atomic, and assignment and copy-construction involve two
+ * objects. A single operation on two distinct objects can't be atomic. In the case of copy-construction or copy-assignment,
+ * the value must first be read from one object and then written to the other. These are two separate operations on two
+ * separate objects, and the combination can't be atomic. Therefore, these operations aren't permitted.
+ *
  */
 class spinlock {
     public:
