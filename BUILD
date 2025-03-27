@@ -26,6 +26,12 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_binary(
+    name = "sync_with_atomic_bool",
+    srcs = ["src/atomic/synchronize_with_atomic_bool.cpp"],
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
