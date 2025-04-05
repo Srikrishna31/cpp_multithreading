@@ -32,6 +32,12 @@ cc_binary(
     deps = [],
 )
 
+cc_binary(
+    name = "sequential_consistency",
+    srcs = ["src/atomic/sequential_consistency.cpp"],
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
