@@ -58,6 +58,23 @@ void read_y_then_x() {
         ++z;
 }
 
+/**
+ *
+ *  The assert (5) can never fire, because either the store to x (1) or the store to y (2) must happen first, even
+ *  though it's not specified which. If the load of y in read_x_then_y (3) returns false, the store to x must occur
+ *  before the store to y, in which case the load of x in read_y_then_x (4) must return true, because the while loop
+ *  ensures that the y is true at this point. Because the semantics of memory_order_seq_cst require a single total ordering
+ *  over all operations tagged memory_order_seq_cst, there's an implied ordering relationship between a load of y that
+ *  returns false (3) and the store to y (1). For there to be a single total order, if one thread sees x == true and then
+ *  subsequently sees y==false, this implies that the store to x occurs before the store to y in this total order.
+ *      Of course, because everything is symmetrical, it could also happen the other way around, with the load of x (4)
+ *  returning false, forcing the load of y (3) to return true. In both cases, z is equal to 1. Both loads can return true,
+ *  leading to z being 2, but under no circumstances can z be zero.
+ *
+ *      Sequential consistency is the most straightforward and intuitive ordering, but it's also the most expensive memory
+ *  ordering because it requires global synchronization between all threads. On a multiprocessor system this may require
+ *  quite extensive and time-consuming communication between processors.
+ */
 int main() {
     x = false;
     y = false;

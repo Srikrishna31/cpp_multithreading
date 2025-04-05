@@ -38,6 +38,12 @@ cc_binary(
     deps = [],
 )
 
+cc_binary(
+    name = "relaxed_ordering",
+    srcs = ["src/atomic/relaxed_ordering.cpp"],
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
