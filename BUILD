@@ -61,6 +61,13 @@ cc_binary(
     deps = [],
 )
 
+cc_binary(
+    name = "relaxed_ordering_acquire_relase_impose_ordering",
+    srcs = ["src/atomic/relaxed_ordering_acquire_release_impose_ordering.cpp"],
+    copts = package_copt,
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
