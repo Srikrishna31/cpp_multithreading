@@ -29,24 +29,35 @@ cc_library(
 cc_binary(
     name = "sync_with_atomic_bool",
     srcs = ["src/atomic/synchronize_with_atomic_bool.cpp"],
+    copts = package_copt,
     deps = [],
 )
 
 cc_binary(
     name = "sequential_consistency",
     srcs = ["src/atomic/sequential_consistency.cpp"],
+    copts = package_copt,
     deps = [],
 )
 
 cc_binary(
     name = "relaxed_ordering",
     srcs = ["src/atomic/relaxed_ordering.cpp"],
+    copts = package_copt,
     deps = [],
 )
 
 cc_binary(
-    name = "relaxed_ordering_multithreaded",
+    name = "relaxed_ordering_multiple_threads",
     srcs = ["src/atomic/relaxed_ordering_multi_threaded.cpp"],
+    copts = package_copt,
+    deps = [],
+)
+
+cc_binary(
+    name = "relaxed_ordering_acquire_release",
+    srcs = ["src/atomic/relaxed_ordering_acquire_release.cpp"],
+    copts = package_copt,
     deps = [],
 )
 
