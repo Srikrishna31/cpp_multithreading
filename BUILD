@@ -62,8 +62,15 @@ cc_binary(
 )
 
 cc_binary(
-    name = "relaxed_ordering_acquire_relase_impose_ordering",
+    name = "relaxed_ordering_acquire_release_impose_ordering",
     srcs = ["src/atomic/relaxed_ordering_acquire_release_impose_ordering.cpp"],
+    copts = package_copt,
+    deps = [],
+)
+
+cc_binary(
+    name = "relaxed_orderign_acquire_release_transitive_synchronization",
+    srcs = ["src/atomic/relaxed_ordering_acquire_release_transitive_synchronization.cpp"],
     copts = package_copt,
     deps = [],
 )
