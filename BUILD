@@ -75,6 +75,12 @@ cc_binary(
     deps = [],
 )
 
+cc_binary(
+    name = "relaxed_ordering_consume",
+    srcs = ["src/atomic/relaxed_ordering_consume.cpp"],
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
