@@ -89,6 +89,13 @@ cc_binary(
     deps = [],
 )
 
+cc_binary(
+    name = "fences",
+    srcs = ["src/atomic/fences.cpp"],
+    copts = package_copt,
+    deps = [],
+)
+
 cc_test(
     name = "test_timer",
     srcs = ["test/test_timer.cpp"],
