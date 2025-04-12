@@ -78,6 +78,14 @@ cc_binary(
 cc_binary(
     name = "relaxed_ordering_consume",
     srcs = ["src/atomic/relaxed_ordering_consume.cpp"],
+    copts = package_copt,
+    deps = [],
+)
+
+cc_binary(
+    name = "release_sequence_chain",
+    srcs = ["src/atomic/release_sequence_chain.cpp"],
+    copts = package_copt,
     deps = [],
 )
 
