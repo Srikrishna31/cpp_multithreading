@@ -6,3 +6,10 @@ cc_library(
     copts = package_copt,
     deps = [],
 )
+
+cc_binary(
+    name = "future_example",
+    srcs = ["future_example.cpp"],
+    copts = package_copt,
+    deps = [],
+)
