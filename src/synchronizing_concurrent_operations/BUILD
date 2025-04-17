@@ -13,3 +13,10 @@ cc_binary(
     copts = package_copt,
     deps = [],
 )
+
+cc_binary(
+    name = "packaged_task_example",
+    srcs = ["packaged_task_example.cpp"],
+    copts = package_copt,
+    deps = [],
+)
