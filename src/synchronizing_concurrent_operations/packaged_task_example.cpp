@@ -120,3 +120,53 @@ int main() {
     stop.store(true);
     gui_bg_thread.join();
 }
+
+/**
+ * Making (std::)promises
+ * std::promise<T> provides a means of setting a value (of type T), which can later be read through an associated std::future<T>
+ * object. A std::promise/std::future pair would provide one possible mechanism for this facility; the waiting thread
+ * could block on the future, while the thread providing the data could use the promise half of the pairing to set the
+ * associated value and make the future ready.
+ * You can obtain the std::future object associated with a given std::promise by calling the get_future() member function,
+ * just like with the std::packaged_task, where the value of the promise is set (using the set_value() member function),
+ * the future becomes ready and can be used to retrieve the stored value. If you destroy the std::promise without setting
+ * a value, an exception is stored instead.
+ *
+ * Saving an exception for the future
+ * If the function call invoked as part of std::sync throws an exception, that exception is stored in the future in place
+ * of a stored value, the future becomes ready, and a call to get() rethrows that stored exception. (Note: the standard
+ * leaves it unspecified whether it is the original exception object that's rethrown or a copy; different compilers and
+ * libraries make different choices on this matter.) The same happens if you wrap the function in a std::packaged_task-
+ * when the task is invoked, if the wrapped function throws an exception, that exception is stored in the future in place
+ * of the result, ready to be thrown on a call to get().
+ *
+ * Naturally, std::promise provides the same facility, with an explicit function call. If you wish to store an exception
+ * rather than a value, you call the set_exception() member function rather than set_value(). This would typically be used
+ * in a catch block for an exception thrown as part of the algorithm, to populate the promise with that exception:
+ *
+ *      extern std::promise<double> some_promise;
+ *      try
+ *      {
+ *          some_promise.set_value(calculate_value());
+ *      }
+ *      catch(...)
+ *      {
+ *          some_promise.set_exception(std::current_exception());
+ *      }
+ * This uses std::current_exception() to retrieve the thrown exception; the alternative here would be to use std::copy_exception()
+ * to store a new exception directly without throwing:
+ *
+ *      some_promise.set_exception(std::copy_exception(std::logic_error("foo ")));
+ *
+ * This is much cleaner than using a try/catch block if the type of the exception is known, and it should be used in
+ * preference; not only does it simplify the code, but it also provides the compiler with greater opportunity to optimize
+ * the code.
+ *
+ * Another way to store an exception in a future is to destroy the std::promise or std::packaged_task associated with the
+ * future without calling either of the set functions on the promise or invoking the packaged task. In either case, the
+ * destructor of the std::promise or std::packaged_task will store a std::future_error exception with an error code of
+ * std::future_errc::broken_promise in the associated state if the future isn't already ready; by creating a future you
+ * make a promise to provide a value or exception, and by destroying the source of that value or exception without providing
+ * one, you break that promise. If the compiler didn't store anything in the future in this case, waiting threads could
+ * potentially wait forever.
+ */
