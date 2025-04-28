@@ -20,3 +20,10 @@ cc_binary(
     copts = package_copt,
     deps = [],
 )
+
+cc_binary(
+    name = "shared_future_example",
+    srcs = ["shared_future_example.cpp"],
+    copts = package_copt,
+    deps = [],
+)
