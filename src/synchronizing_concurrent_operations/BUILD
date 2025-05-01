@@ -27,3 +27,10 @@ cc_binary(
     copts = package_copt,
     deps = [],
 )
+
+cc_binary(
+    name = "waiting_timeout_cv",
+    srcs = ["waiting_timeout_cv.cpp"],
+    copts = package_copt,
+    deps = [],
+)
