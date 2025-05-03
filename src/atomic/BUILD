@@ -6,10 +6,10 @@ cc_library(
         "spinlock.cpp",
     ],
     hdrs = [
-        "include/atomic/spinlock.h",
+        "//include/atomic:spinlock.h",
     ],
     copts = package_copt,
-    strip_include_prefix = "include",
+    strip_include_prefix = "//include/atomic",
     visibility = ["//visibility:public"],
 )
 
