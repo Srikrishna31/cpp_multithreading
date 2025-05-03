@@ -40,5 +40,24 @@ cc_library(
     srcs = ["//include/synchronizing_concurrent_operations:sequential_quick_sort.h"],
     hdrs = ["//include/synchronizing_concurrent_operations:sequential_quick_sort.h"],
     copts = package_copt,
+    strip_include_prefix = "//include",
     deps = [],
+)
+
+cc_library(
+    name = "parallel_quick_sort",
+    srcs = ["//include/synchronizing_concurrent_operations:parallel_quick_sort.h"],
+    hdrs = ["//include/synchronizing_concurrent_operations:parallel_quick_sort.h"],
+    copts = package_copt,
+    strip_include_prefix = "//include",
+    deps = [],
+)
+
+cc_binary(
+    name = "test_quick_sort",
+    srcs = ["test_quick_sort.cpp"],
+    deps = [
+        ":parallel_quick_sort",
+        ":sequential_quick_sort",
+    ],
 )
