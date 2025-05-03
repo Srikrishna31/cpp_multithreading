@@ -34,3 +34,11 @@ cc_binary(
     copts = package_copt,
     deps = [],
 )
+
+cc_library(
+    name = "sequential_quick_sort",
+    srcs = ["//include/synchronizing_concurrent_operations:sequential_quick_sort.h"],
+    hdrs = ["//include/synchronizing_concurrent_operations:sequential_quick_sort.h"],
+    copts = package_copt,
+    deps = [],
+)

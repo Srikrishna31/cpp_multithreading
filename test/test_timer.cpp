@@ -5,7 +5,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <gtest/gtest.h>
-#include "timer.h"
+#include "include/timer.h"
 
 class TimerShould : public ::testing::Test
 {
