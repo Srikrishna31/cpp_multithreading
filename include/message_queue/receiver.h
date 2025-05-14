@@ -1,4 +1,5 @@
 #pragma once
+#include "dispatcher.h"
 #include "sender.h"
 
 namespace messaging {

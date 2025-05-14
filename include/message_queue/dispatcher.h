@@ -35,7 +35,7 @@ namespace messaging {
             }
         }
 
-        bool dispatch(std::shared_ptr<message_base> cons& msg) {
+        bool dispatch(std::shared_ptr<message_base> const& msg) {
             if (dynamic_cast<wrapped_message_base<close_queue>*>(msg.get())) {
                 throw close_queue();
             }
