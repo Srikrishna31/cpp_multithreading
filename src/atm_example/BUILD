@@ -1,5 +1,7 @@
 load("@//:config.bzl", "package_copt")
 
+package(default_visibility = ["//visibility:public"])
+
 cc_binary(
     name = "atm_example",
     srcs = [
@@ -10,6 +12,7 @@ cc_binary(
         "interface_machine.cpp",
         "interface_machine.h",
         "main.cpp",
+        "messages.h",
     ],
     copts = package_copt,
     deps = [

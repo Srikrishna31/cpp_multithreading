@@ -1,5 +1,7 @@
 load("@//:config.bzl", "package_copt")
 
+package(default_visibility = ["//visibility:public"])
+
 cc_library(
     name = "spinlock",
     srcs = [

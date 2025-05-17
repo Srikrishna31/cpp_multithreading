@@ -1,5 +1,7 @@
 load("@//:config.bzl", "package_copt")
 
+package(default_visibility = ["//visibility:public"])
+
 cc_library(
     name = "threadsafe_queue",
     srcs = ["thread_safe_queue.h"],
