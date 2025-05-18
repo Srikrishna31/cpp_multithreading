@@ -116,3 +116,8 @@ alias(
     name = "atm_example",
     actual = "//src/atm_example:atm_example",
 )
+
+alias(
+    name = "thread_fizzbuzz",
+    actual = "//src/modern_cpp_concurrency_udemy:thread_fizzbuzz",
+)

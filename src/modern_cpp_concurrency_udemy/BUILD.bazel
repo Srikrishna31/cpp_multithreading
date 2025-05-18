@@ -1,0 +1,10 @@
+load("@//:config.bzl", "package_copt")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "thread_fizzbuzz",
+    srcs = ["thread_fizzbuzz.cpp"],
+    copts = package_copt,
+    deps = [],
+)
