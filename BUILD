@@ -121,3 +121,8 @@ alias(
     name = "thread_fizzbuzz",
     actual = "//src/modern_cpp_concurrency_udemy:thread_fizzbuzz",
 )
+
+alias(
+    name = "data_race",
+    actual = "//src/modern_cpp_concurrency_udemy:data_race",
+)
