@@ -29,3 +29,10 @@ cc_binary(
     copts = package_copt,
     deps = [],
 )
+
+cc_binary(
+    name = "lazy_initalization",
+    srcs = ["lazy_initialization.cpp"],
+    copts = package_copt,
+    deps = [],
+)

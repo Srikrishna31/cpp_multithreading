@@ -136,3 +136,8 @@ alias(
     name = "thread_local_example",
     actual = "//src/modern_cpp_concurrency_udemy:thread_local_example",
 )
+
+alias(
+    name = "lazy_initialization",
+    actual = "//src/modern_cpp_concurrency_udemy:lazy_initalization",
+)
