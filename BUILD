@@ -126,3 +126,8 @@ alias(
     name = "data_race",
     actual = "//src/modern_cpp_concurrency_udemy:data_race",
 )
+
+alias(
+    name = "deadlock",
+    actual = "//src/modern_cpp_concurrency_udemy:deadlock",
+)
