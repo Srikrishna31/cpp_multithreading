@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <vector>
 /**
@@ -126,9 +127,49 @@ public:
 Singleton* Singleton::instance = nullptr;
 
 void task() {
-    Singleton* single = Singleton::get_Singleton();
+    const Singleton* single = Singleton::get_Singleton();
     std::cout << single << std::endl;
 }
+
+/**
+ *
+ * Deadlock
+ *      * A thread is deadlocked when it cannot run
+ *      * Often used to refer to "mutual deadlock"
+ *          - Two or more threads are waiting for each other
+ *          - Threads A and B are waiting for an event that can never happen
+ *      * The classic example involves waiting for mutexes
+ */
+
+using namespace std::literals;
+
+std::mutex mut1;
+std::mutex mut2;
+
+auto funcA() {
+    std::cout << "Thread A trying to lock mutex 1..." << std::endl;
+    std::lock_guard<std::mutex> lock(mut1);
+    std::cout << "Thread A has locked mutex 1" << std::endl;
+    std::this_thread::sleep_for(50ms);
+    std::cout << "Thread A trying to lock mutex 2..." << std::endl;
+    std::lock_guard<std::mutex> lock1(mut2);
+    std::cout << "Thread A has locked mutex 2" << std::endl;
+    std::this_thread::sleep_for(50ms);
+    std::cout << "Thread A releases all its locks" << std::endl;
+}
+
+auto funcB() {
+    std::cout << "Thread B trying to lock mutex 2..." << std::endl;
+    std::lock_guard<std::mutex> lock(mut2);
+    std::cout << "Thread B has locked mutex 2" << std::endl;
+    std::this_thread::sleep_for(50ms);
+    std::cout << "Thread B trying to lock mutex 1..." << std::endl;
+    std::lock_guard<std::mutex> lock1(mut1);
+    std::cout << "Thread B has locked mutex 1" << std::endl;
+    std::this_thread::sleep_for(50ms);
+    std::cout << "Thread B releases all its locks" << std::endl;
+}
+
 auto main() -> int {
     std::vector<std::thread> threads;
 
@@ -140,4 +181,10 @@ auto main() -> int {
     for (auto& thread : threads) {
         thread.join();
     }
+
+    std::thread thrA{funcA};
+    std::thread thrB{funcB};
+
+    thrA.join();
+    thrB.join();
 }
