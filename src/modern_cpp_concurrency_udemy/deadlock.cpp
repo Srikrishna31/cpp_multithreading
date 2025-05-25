@@ -139,6 +139,23 @@ void task() {
  *          - Two or more threads are waiting for each other
  *          - Threads A and B are waiting for an event that can never happen
  *      * The classic example involves waiting for mutexes
+ *
+ *      * Mutual Deadlock
+ *          - Can also occur when waiting for
+ *              -> The result of a computation performed by another thread.
+ *              -> A message sent by another thread
+ *              -> A GUI event produced by another thread
+ *          - The second most common problem in multi-threading code
+ *          - Often caused by threads trying to lock mutexes in different orders
+ *
+ *      * Deadlock Avoidance
+ *          - A simple way to avoid deadlock
+ *          - Both threads try to acquire the locks in the same order
+ *              -> Thread A and thread B both try to lock mutex1 first
+ *              -> The successful thread then tries to lock mutex2
+ *          - This is not ideal
+ *              -> Relies on the programmer
+ *              -> Maynot be feasible in large programs
  */
 
 using namespace std::literals;

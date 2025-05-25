@@ -141,3 +141,8 @@ alias(
     name = "lazy_initialization",
     actual = "//src/modern_cpp_concurrency_udemy:lazy_initalization",
 )
+
+alias(
+    name = "dining_philosophers_problem",
+    actual = "//src/modern_cpp_concurrency_udemy:dining_philosophers_problem",
+)
