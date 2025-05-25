@@ -131,3 +131,8 @@ alias(
     name = "deadlock",
     actual = "//src/modern_cpp_concurrency_udemy:deadlock",
 )
+
+alias(
+    name = "thread_local_example",
+    actual = "//src/modern_cpp_concurrency_udemy:thread_local_example",
+)
