@@ -1,14 +1,6 @@
 load("//:convenience_def.bzl", "generate_cc_binary_targets")
+load(":targets.bzl", "modern_cpp_concurrency_udemy_binary_target_list")
 
 package(default_visibility = ["//visibility:public"])
 
-generate_cc_binary_targets(
-    [
-        "data_race",
-        "deadlock",
-        "dining_philosophers_problem",
-        "lazy_initialization",
-        "thread_fizzbuzz",
-        "thread_local_example",
-    ],
-)
+generate_cc_binary_targets(modern_cpp_concurrency_udemy_binary_target_list)

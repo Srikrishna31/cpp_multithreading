@@ -1,6 +1,7 @@
 load("@//:config.bzl", "package_copt")
 load("@//:convenience_def.bzl", "generate_alias_targets")
 load("@//src/atomic:targets.bzl", "atomic_binary_target_list")
+load("@//src/modern_cpp_concurrency_udemy:targets.bzl", "modern_cpp_concurrency_udemy_binary_target_list")
 load("@//src/synchronizing_concurrent_operations:targets.bzl", "sync_concurrent_op_binary_target_list")
 
 cc_test(
@@ -55,32 +56,4 @@ alias(
     actual = "//src/atm_example:atm_example",
 )
 
-alias(
-    name = "thread_fizzbuzz",
-    actual = "//src/modern_cpp_concurrency_udemy:thread_fizzbuzz",
-)
-
-alias(
-    name = "data_race",
-    actual = "//src/modern_cpp_concurrency_udemy:data_race",
-)
-
-alias(
-    name = "deadlock",
-    actual = "//src/modern_cpp_concurrency_udemy:deadlock",
-)
-
-alias(
-    name = "thread_local_example",
-    actual = "//src/modern_cpp_concurrency_udemy:thread_local_example",
-)
-
-alias(
-    name = "lazy_initialization",
-    actual = "//src/modern_cpp_concurrency_udemy:lazy_initalization",
-)
-
-alias(
-    name = "dining_philosophers_problem",
-    actual = "//src/modern_cpp_concurrency_udemy:dining_philosophers_problem",
-)
+generate_alias_targets(modern_cpp_concurrency_udemy_binary_target_list, "//src/modern_cpp_concurrency_udemy")
