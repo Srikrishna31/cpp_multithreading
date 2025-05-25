@@ -1,4 +1,6 @@
 load("@//:config.bzl", "package_copt")
+load("@//:convenience_def.bzl", "generate_alias_targets")
+load("@//src/atomic:targets.bzl", "atomic_binary_target_list")
 
 cc_test(
     name = "test_timer",
@@ -12,59 +14,14 @@ cc_test(
     ],
 )
 
+generate_alias_targets(
+    atomic_binary_target_list,
+    "//src/atomic",
+)
+
 alias(
     name = "spinlock",
     actual = "//src/atomic:spinlock",
-)
-
-alias(
-    name = "fences",
-    actual = "//src/atomic:fences",
-)
-
-alias(
-    name = "relaxed_orderign_acquire_release_transitive_synchronization",
-    actual = "//src/atomic:relaxed_orderign_acquire_release_transitive_synchronization",
-)
-
-alias(
-    name = "relaxed_ordering",
-    actual = "//src/atomic:relaxed_ordering",
-)
-
-alias(
-    name = "relaxed_ordering_acquire_release",
-    actual = "//src/atomic:relaxed_ordering_acquire_release",
-)
-
-alias(
-    name = "relaxed_ordering_acquire_release_impose_ordering",
-    actual = "//src/atomic:relaxed_ordering_acquire_release_impose_ordering",
-)
-
-alias(
-    name = "relaxed_ordering_consume",
-    actual = "//src/atomic:relaxed_ordering_consume",
-)
-
-alias(
-    name = "relaxed_ordering_multiple_threads",
-    actual = "//src/atomic:relaxed_ordering_multiple_threads",
-)
-
-alias(
-    name = "release_sequence_chain",
-    actual = "//src/atomic:release_sequence_chain",
-)
-
-alias(
-    name = "sequential_consistency",
-    actual = "//src/atomic:sequential_consistency",
-)
-
-alias(
-    name = "sync_with_atomic_bool",
-    actual = "//src/atomic:sync_with_atomic_bool",
 )
 
 alias(
