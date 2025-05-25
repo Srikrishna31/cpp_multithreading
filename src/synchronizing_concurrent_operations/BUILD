@@ -1,4 +1,6 @@
 load("@//:config.bzl", "package_copt")
+load("@//:convenience_def.bzl", "generate_cc_binary_targets")
+load(":targets.bzl", "sync_concurrent_op_binary_target_list")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -9,33 +11,7 @@ cc_library(
     deps = [],
 )
 
-cc_binary(
-    name = "future_example",
-    srcs = ["future_example.cpp"],
-    copts = package_copt,
-    deps = [],
-)
-
-cc_binary(
-    name = "packaged_task_example",
-    srcs = ["packaged_task_example.cpp"],
-    copts = package_copt,
-    deps = [],
-)
-
-cc_binary(
-    name = "shared_future_example",
-    srcs = ["shared_future_example.cpp"],
-    copts = package_copt,
-    deps = [],
-)
-
-cc_binary(
-    name = "waiting_timeout_cv",
-    srcs = ["waiting_timeout_cv.cpp"],
-    copts = package_copt,
-    deps = [],
-)
+generate_cc_binary_targets(sync_concurrent_op_binary_target_list)
 
 cc_library(
     name = "sequential_quick_sort",
@@ -53,13 +29,4 @@ cc_library(
     copts = package_copt,
     strip_include_prefix = "//include",
     deps = [],
-)
-
-cc_binary(
-    name = "test_quick_sort",
-    srcs = ["test_quick_sort.cpp"],
-    deps = [
-        ":parallel_quick_sort",
-        ":sequential_quick_sort",
-    ],
 )

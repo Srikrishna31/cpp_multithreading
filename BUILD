@@ -1,6 +1,7 @@
 load("@//:config.bzl", "package_copt")
 load("@//:convenience_def.bzl", "generate_alias_targets")
 load("@//src/atomic:targets.bzl", "atomic_binary_target_list")
+load("@//src/synchronizing_concurrent_operations:targets.bzl", "sync_concurrent_op_binary_target_list")
 
 cc_test(
     name = "test_timer",
@@ -19,6 +20,11 @@ generate_alias_targets(
     "//src/atomic",
 )
 
+generate_alias_targets(
+    sync_concurrent_op_binary_target_list,
+    "//src/synchronizing_concurrent_operations",
+)
+
 alias(
     name = "spinlock",
     actual = "//src/atomic:spinlock",
@@ -27,16 +33,6 @@ alias(
 alias(
     name = "message_queue",
     actual = "//include/message_queue:message_queue",
-)
-
-alias(
-    name = "future_example",
-    actual = "//src/synchronizing_concurrent_operations:future_example",
-)
-
-alias(
-    name = "packaged_task_example",
-    actual = "//src/synchronizing_concurrent_operations:packaged_task_example",
 )
 
 alias(
@@ -50,23 +46,8 @@ alias(
 )
 
 alias(
-    name = "shared_future_example",
-    actual = "//src/synchronizing_concurrent_operations:shared_future_example",
-)
-
-alias(
-    name = "test_quick_sort",
-    actual = "//src/synchronizing_concurrent_operations:test_quick_sort",
-)
-
-alias(
     name = "threadsafe_queue",
     actual = "//src/synchronizing_concurrent_operations:threadsafe_queue",
-)
-
-alias(
-    name = "waiting_timeout_cv",
-    actual = "//src/synchronizing_concurrent_operations:waiting_timeout_cv",
 )
 
 alias(
