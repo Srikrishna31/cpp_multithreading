@@ -68,8 +68,13 @@ auto dint(const int nphilo) {
      *
      * Each philosopher must pick up their left fork first
      */
-    const int lfork = nphilo;
-    const int rfork = (nphilo + 1) % nforks;
+    int lfork = nphilo;
+    int rfork = (nphilo + 1) % nforks;
+
+    //Hierarchical mutex lock solution: pick lower numbered mutexes first
+    if (lfork > rfork) {
+        std::swap(lfork, rfork);
+    }
 
     // print(nphilo, "\'s left fork is number", lfork);
     // print(nphilo, "\'s right fork is number", rfork);
