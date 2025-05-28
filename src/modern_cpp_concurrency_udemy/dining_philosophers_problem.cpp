@@ -47,9 +47,9 @@ std::mutex print_mutex;
 // Functions to display information about the 'nth' philosopher
 
 // Interactions with a fork
-auto print(int n, const std::string& str, int forkno) {
+auto print(const int n, const std::string& str, const int lfork, const int rfork) {
     std::lock_guard<std::mutex> print_lock(print_mutex);
-    std::cout << "Philosopher #" << names[n] << str << forkno << std::endl;
+    std::cout << "Philosopher #" << names[n] << str << lfork << " and " << rfork <<std::endl;
 }
 
 // The philosopher's state
@@ -71,35 +71,42 @@ auto dint(const int nphilo) {
     const int lfork = nphilo;
     const int rfork = (nphilo + 1) % nforks;
 
-    print(nphilo, "\'s left fork is number", lfork);
-    print(nphilo, "\'s right fork is number", rfork);
+    // print(nphilo, "\'s left fork is number", lfork);
+    // print(nphilo, "\'s right fork is number", rfork);
+    print(nphilo, "\'s forks are ", lfork, rfork);
     print(nphilo, " is thinking...");
 
     std::this_thread::sleep_for(think_time);
 
     // Make an attempt to eat
-    print(nphilo, " reaches for fork number ", lfork);
+    // print(nphilo, " reaches for fork number ", lfork);
+    print(nphilo, " reaches for forks ", lfork, rfork);
 
     // Try to pick up the left fork
-    fork_mutex[lfork].lock();
-    print(nphilo, " picks up fork ", lfork);
-    print(nphilo, " is thinking...");
+    // fork_mutex[lfork].lock();
+    // print(nphilo, " picks up fork ", lfork);
+    // print(nphilo, " is thinking...");
+    //
+    // // Succeeded - now try to pick up the right fork
+    // std::this_thread::sleep_for(think_time);
+    //
+    // print(nphilo, " reaches for fork number ", rfork);
+    //
+    // fork_mutex[rfork].lock();
 
-    // Succeeded - now try to pick up the right fork
-    std::this_thread::sleep_for(think_time);
-
-    print(nphilo, " reaches for fork number ", rfork);
-
-    fork_mutex[rfork].lock();
-
+    // Try to pick up both forks
+    std::lock(fork_mutex[lfork], fork_mutex[rfork]);
     //Succeeded - this philosopher can now eat
-    print(nphilo, " picks up fork ", rfork);
+    print(nphilo, " picks up fork ", lfork, rfork);
     print(nphilo, " is eating...");
+    ++mouthfuls[nphilo];
 
+    // Try to pick up both forks
     std::this_thread::sleep_for(eat_time);
 
-    print(nphilo, " puts down fork ", lfork);
-    print(nphilo, " puts down fork ", rfork);
+    // print(nphilo, " puts down fork ", lfork);
+    // print(nphilo, " puts down fork ", rfork);
+    print(nphilo, "puts down fork ", lfork, rfork);
     print(nphilo, " is thinking...");
 
     fork_mutex[lfork].unlock();
@@ -122,7 +129,7 @@ auto main() -> int {
 
     // How many times were the philosophers were able to eat?
     for (int i = 0; i < nphilosophers; i++) {
-        std::cout << "Philosopher #" << names[i] << " had " << mouthfuls[i] << "mouthfuls" << std::endl;
+        std::cout << "Philosopher #" << names[i] << " had " << mouthfuls[i] << " mouthful(s)" << std::endl;
     }
 
     return 0;
