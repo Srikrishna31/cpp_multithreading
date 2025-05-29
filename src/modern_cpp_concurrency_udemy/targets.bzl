@@ -1,4 +1,5 @@
 modern_cpp_concurrency_udemy_binary_target_list = [
+    "condition_variables",
     "data_race",
     "deadlock",
     "deadlock_avoidance",
