@@ -54,6 +54,21 @@ auto funcB_livelock_resolved() {
     std::this_thread::sleep_for(2s);
     std::cout << "ThreadB has locked both mutexes" << std::endl;
 }
+
+int x{0};
+
+/**
+ *
+ * There is a possibility of livelock, when both thread read the value at same time, and then update the value as follows:
+ *  . Thread A updates it to 1
+ *  . Thread B gets scheduled, and it updates the value to 0
+ *  . Thread A again updates it to 0, and this loop continues forever.
+ */
+auto func() {
+    while (x == 0) {
+        x = 1 - x;
+    }
+}
 /**
  *
  * LiveLock
@@ -85,7 +100,7 @@ auto funcB_livelock_resolved() {
  *              # A low priority thread will be suspended or interrupted more often.
  *          . The high priority thread will lock the mutex first
  *          . The low priority thread will lock the mutex afterwards.
- *      > Reasource Starvation
+ *      > Resource Starvation
  *          . A thread cannot get the resources it needs to run
  *              # In deadlock and livelock, the thread cannot acquire a lock it needs
  *          . Lack of system resources can prevent a thread from starting
@@ -111,5 +126,12 @@ auto main() -> int {
     threadA.join();
     threadB.join();
 
+    std::thread threadC(func);
+    std::thread threadD(func);
+
+    threadC.join();
+    threadD.join();
+
+    std::cout << x << std::endl;
     return 0;
 }
