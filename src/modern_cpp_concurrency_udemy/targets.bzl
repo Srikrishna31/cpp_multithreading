@@ -1,5 +1,6 @@
 modern_cpp_concurrency_udemy_binary_target_list = [
     "condition_variables",
+    "cv_thread_coordination",
     "data_race",
     "deadlock",
     "deadlock_avoidance",
