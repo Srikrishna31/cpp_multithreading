@@ -5,6 +5,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "deadlock",
     "deadlock_avoidance",
     "dining_philosophers_problem",
+    "futures_and_promises",
     "lazy_initialization",
     "livelock",
     "thread_coordination_mutexes",
