@@ -11,4 +11,5 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "thread_coordination_mutexes",
     "thread_fizzbuzz",
     "thread_local_example",
+    "threaded_integer_ops",
 ]
