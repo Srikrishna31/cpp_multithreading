@@ -1,5 +1,6 @@
 modern_cpp_concurrency_udemy_binary_target_list = [
     "atomic_double_checked_locking",
+    "atomic_flag_spin_lock",
     "condition_variables",
     "cv_thread_coordination",
     "data_race",
