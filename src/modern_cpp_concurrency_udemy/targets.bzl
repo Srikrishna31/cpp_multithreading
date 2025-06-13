@@ -11,6 +11,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "lazy_initialization",
     "livelock",
     "lock_free_queue",
+    "packaged_task_ex",
     "thread_coordination_mutexes",
     "thread_fizzbuzz",
     "thread_local_example",
