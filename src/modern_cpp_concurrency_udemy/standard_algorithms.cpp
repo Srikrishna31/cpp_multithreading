@@ -38,7 +38,8 @@ auto main() -> int {
     std::cout << "String to search: " << str << std::endl;
 
     std::cout << "Searching for first occurrence of \'o\'" << std::endl;
-    auto res = std::find(str.begin(), str.end(), 'o');
+    // auto res = std::find(str.begin(), str.end(), 'o');
+    auto res = std::find_if(str.cbegin(), str.cend(), [](const char c) { return ::toupper(c) == 'O';});
 
     if (res != str.cend()) {
         std::cout << "Found a matching element at index: " << res - str.begin() << std::endl;
