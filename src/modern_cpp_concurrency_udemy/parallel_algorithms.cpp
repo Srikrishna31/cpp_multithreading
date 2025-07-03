@@ -13,6 +13,24 @@ auto print_container(const std::vector<int>& vec) -> void {
     std::cout << std::endl;
 }
 
+auto exception_sort() {
+    auto vec = std::vector{3,1,4,1,5,9};
+
+    try {
+        // std::ranges::sort(vec, [](int a, int b) {
+        //     throw std::out_of_range("Oops");
+        //     return true;
+        // });
+        std::sort(se::seq, vec.begin(), vec.end(), [](int a, int b) {
+            throw std::out_of_range("Oops");
+            return true;
+        });
+    } catch (std::exception& e) {
+        std::cout << "Caught exception: " << e.what() << std::endl;
+    }
+
+    print_container(vec);
+}
 /**
  *  Execution Policies
  *   > Code Execution
@@ -73,6 +91,25 @@ auto print_container(const std::vector<int>& vec) -> void {
  *          # An operation may be migrated from one thread to another
  *          # The programmer must avoid data races
  *          # The programmer must avoid any modification of shared state between elements or between threads.
+ *    > Numeric Algorithms and Execution Policies
+ *      * Some algorithms in <numeric> now have two versions
+ *          # The C++14 version
+ *          # A new version with policy support
+ *      * The new versions have new names
+ *          # accumulate() -> reduce()
+ *          # partial_sum() -> inclusive_scan(), exclusive_scan()
+ *      * There is also a new "fused" algorithm with policy support
+ *          # transform() + inner_product() -> transform_reduce()
+ *    > Algorithms and Exceptions in C++ 14
+ *      * Algorithms can throw exceptions
+ *          # e.g. An algorithm call which applies a function to every element
+ *          # The function throws an exception
+ *      * The exception will be handled by other code.
+ *          # If there is no handler, execution ends.
+ *      * This approach doesn't work with execution policies
+ *          # Maybe multiple threads
+ *          # Each thread has its own execution stack
+ *      * If an exception is thrown, std::terminate() is called.
  */
 auto main() -> int {
     auto vec = std::vector{3,1,4,1,5,9};
@@ -102,5 +139,9 @@ auto main() -> int {
 
     print_container(vec3);
 
+    exception_sort();
+
+    std::cout << "Exiting gracefully" << std::endl;
+    return 0;
 }
 
