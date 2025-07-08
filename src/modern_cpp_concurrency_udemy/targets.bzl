@@ -13,6 +13,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "lazy_initialization.cpp",
     "livelock.cpp",
     "lock_free_queue.cpp",
+    "new_parallel_algorithms.cpp",
     "packaged_task_ex.cpp",
     "parallel_algorithms.cpp",
     "standard_algorithms.cpp",
