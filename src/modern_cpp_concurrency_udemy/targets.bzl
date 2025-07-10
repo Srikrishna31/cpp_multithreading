@@ -6,6 +6,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "cv_thread_coordination.cpp",
     "data_race.cpp",
     "data_parallelism.cpp",
+    "data_structures_and_concurrency.cpp",
     "deadlock.cpp",
     "deadlock_avoidance.cpp",
     "dining_philosophers_problem.cpp",
