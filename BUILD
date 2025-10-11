@@ -56,4 +56,9 @@ alias(
     actual = "//src/atm_example:atm_example",
 )
 
+alias(
+    name = "odr_check",
+    actual = "//src/odr_check:odr_check",
+)
+
 generate_alias_targets(modern_cpp_concurrency_udemy_binary_target_list, "//src/modern_cpp_concurrency_udemy")
