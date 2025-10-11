@@ -17,6 +17,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "new_parallel_algorithms.cpp",
     "packaged_task_ex.cpp",
     "parallel_algorithms.cpp",
+    "shared_pointer.cpp",
     "standard_algorithms.cpp",
     "thread_coordination_mutexes.cpp",
     "thread_fizzbuzz.cpp",
