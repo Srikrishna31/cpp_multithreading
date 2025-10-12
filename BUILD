@@ -62,3 +62,10 @@ alias(
 )
 
 generate_alias_targets(modern_cpp_concurrency_udemy_binary_target_list, "//src/modern_cpp_concurrency_udemy")
+
+py_binary(
+    name = "symbol_checker_binary",
+    srcs = ["symbol_checker.py"],
+    main = "symbol_checker.py",
+    deps = [],
+)

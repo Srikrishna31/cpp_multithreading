@@ -10,3 +10,8 @@ module(
 )
 
 bazel_dep(name = "googletest", version = "1.16.0", repo_name = "gtest")
+bazel_dep(name = "hermetic_clang_toolchain", version = "1.0.1")
+
+#bazel_dep(name = "rules_python", version = "0.19.0")
+bazel_dep(name = "rules_rust", version = "0.65.0")
+bazel_dep(name = "rules_rust_bindgen", version = "0.65.0")
