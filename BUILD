@@ -67,5 +67,7 @@ py_binary(
     name = "symbol_checker_binary",
     srcs = ["symbol_checker.py"],
     main = "symbol_checker.py",
-    deps = [],
+    deps = [
+        "@pypi__libclang//:pkg",
+    ],
 )
