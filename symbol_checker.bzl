@@ -67,11 +67,9 @@ def _symbol_checker_impl(ctx):
     }
 
     info = ctx.actions.declare_file("{}_symbol_info.json".format(ctx.attr.target.label.name))
-    ctx.actions.write(output = info, content = json.indent(str(json.encode(manifest, indent = "    "))))
+    ctx.actions.write(output = info, content = json.indent(json.encode(manifest)))
 
-    # Write the workspace path to a file so that the python script can load the files, as bazel gives only relative paths
-    # to the sources and includes.
-    path_file = ctx.actions.declat_file("{}_workspace_path.txt".format(ctx.attr.target.label.name))
+    path_file = ctx.actions.declare_file("{}_workspace_path.txt".format(ctx.attr.target.label.name))
     src = context.srcs[0]
     ctx.actions.run_shell(
         outputs = [path_file],
@@ -86,32 +84,11 @@ def _symbol_checker_impl(ctx):
             src_short = src.short_path,
             out_full = path_file.path,
         ),
-        #        execution_requirements = {"requires-darwin": "1"} if ctx.os.name == "macos" else {},
         execution_requirements = {
-            "requires-darwin": "1" if ctx.os.name == "macos" else "0",
-            "requires-linux": "1" if ctx.os.name == "linux" else "0",
-            "requires-windows": "1" if ctx.os.name == "windows" else "0",
             "local": "1",
             "no-remote": "1",
             "no-sandbox": "1",
         },
-    )
-
-    # Create a simple shell script to let the symbol checker script run.
-    wrapper = ctx.actions.declare_file(ctx.label.name)
-    ctx.actions.write(
-        output = wrapper,
-        content = """
-        #!/bin/bash
-        python3 "{script}" "{args}" "@"
-        """.format(
-            script = ctx.executable._generator.path,
-            args = " ".join([
-                "'%s'" % arg.replace("'", "'\\''")
-                for arg in ctx.attr.args
-            ]),
-        ),
-        is_executable = True,
     )
 
     outputs = [ctx.actions.declare_file("{}_validation.txt".format(ctx.attr.name))]
@@ -121,12 +98,12 @@ def _symbol_checker_impl(ctx):
         outputs = outputs,
         mnemonic = "SymbolChecker",
         arguments = _build_arguments(info.path, outputs[0].path, path_file.path),
+        executable = ctx.executable._generator,
     )
 
     return [
         DefaultInfo(
-            files = depset([wrapper]),
-            executables = wrapper,
+            files = depset(outputs),
         ),
     ]
 
@@ -174,7 +151,7 @@ def _symbol_checker_impl(ctx):
 check_symbols = rule(
     implementation = _symbol_checker_impl,
     attrs = {
-        "target": attr.label_list(
+        "target": attr.label(
             doc = "Target for which symbols are to be checked.",
             mandatory = True,
             allow_files = False,
@@ -188,7 +165,6 @@ check_symbols = rule(
             doc = "The symbol checker script.",
         ),
     },
-    executable = True,
     outputs = {"validation": "%{name}_validation.txt"},
     doc = "A rule to check for symbol conflicts in C/C++ targets.",
 )

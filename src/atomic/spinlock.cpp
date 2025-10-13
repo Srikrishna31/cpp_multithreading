@@ -2,7 +2,7 @@
 // Created by coolk on 24-03-2025.
 //
 
-#include "atomic/spinlock.h"
+#include "spinlock.h"
 
 /**
  * Each of the operations on the atomic types has an optional memory-ordering argument that can be used to specify the
@@ -86,7 +86,7 @@
  *  user to enforce an ordering of operations between threads.
  */
 spinlock::spinlock()
-    : flag_(ATOMIC_FLAG_INIT)
+    : flag_{}
 {}
 
 auto spinlock::lock() -> void {
