@@ -1,4 +1,4 @@
-VALIDATOR = "symbol_checker"
+VALIDATOR = "symbol_checker_binary"
 
 SourceInfo = provider(
     doc = "A struct holding the compilation information for a target.",
@@ -175,6 +175,6 @@ def _build_arguments(info_path, output_path, workspace_path_file):
         info_path,
         "--validation_file",
         output_path,
-        "--workspace_path_file",
+        "--workspace_path",
         workspace_path_file,
     ]

@@ -11,31 +11,23 @@ module(
     version = "0.9",
 )
 
+bazel_dep(name = "platforms", version = "0.0.11")
 bazel_dep(name = "googletest", version = "1.16.0", repo_name = "gtest")
 
 #bazel_dep(name = "hermetic_clang_toolchain", version = "1.0.1")
-bazel_dep(name = "rules_python", version = "0.33.2")
+bazel_dep(name = "rules_python", version = "0.40.0")
 #bazel_dep(name = "rules_rust", version = "0.65.0")
 #bazel_dep(name = "rules_rust_bindgen", version = "0.65.0")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-
-#python.defaults(python_version = "3.12")
 python.toolchain(
     python_version = "3.12",
 )
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
-pip.install(requirements = "//:requirements.txt")
-#pip.parse(
-#    hub_name = "pypi",
-#    requirements = "//:requirements.txt",
-#)
-
-#pip.parse(
-#    hub_name = "my_deps",
-#    requirements = "//:requirements.txt",
-#)
-use_repo(pip, "pypi__libclang")
-
-#install_deps()
+pip.parse(
+    hub_name = "pip",
+    python_version = "3.12",
+    requirements_lock = "//:requirements.txt",
+)
+use_repo(pip, "pip")
