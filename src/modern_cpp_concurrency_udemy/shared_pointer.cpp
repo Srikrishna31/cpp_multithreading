@@ -3,17 +3,29 @@
 //
 #include <memory>
 #include <iostream>
+#include <mutex>
 
 // std::shared_ptr has an "atomic" reference counter
 std::shared_ptr shptr = std::make_shared<int>(42);
 
+// Mutex to protect shared_ptr data
+std::mutex mut;
 auto func1() {
     // Increments shared_p's reference counter - safe
     std::shared_ptr shp1 = shptr;
+
+    // Potentially conflicting access - must be protected by mutex
+    std::lock_guard<std::mutex> lock(mut);
+    *shptr = 100;
 }
 
 auto func2() {
     // Increments shared-p's reference counter - safe
+    std::shared_ptr shp2 = shptr;
+
+    //Potential conflicting access - must be protected by mutex
+    std::lock_guard<std::mutex> lock(mut);
+    *shptr = 200;
 }
 /**
  *
@@ -65,6 +77,15 @@ auto main() -> int {
 
     // Releases the allocated memory
     ptr1 = nullptr;
+
+    std::cout << "shptr data: " << *shptr << std::endl;
+
+    std::thread t1{func1};
+    std::thread t2{func2};
+    t1.join();
+    t2.join();
+
+    std::cout << "shptr data: " << *shptr << std::endl;
 
     return 0;
 }

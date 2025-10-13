@@ -1,3 +1,29 @@
+"""
+Symbol Checker - One Definition Rule (ODR) Violation Detector
+
+This module provides functionality to detect ODR violations in C/C++ projects
+by parsing source files with libclang and identifying duplicate symbol definitions
+across translation units.
+
+The script is designed to be called by Bazel's check_symbols rule, which provides
+compilation information via a JSON manifest file.
+
+Key Components:
+    - Arguments: Builder pattern for command-line argument parsing
+    - SymbolChecker: Main class that performs symbol analysis using libclang
+    - Utility functions: AST traversal and error reporting
+
+Usage:
+    python symbol_checker.py \\
+        --manifest_file <path_to_manifest.json> \\
+        --validation_file <path_to_output.txt> \\
+        --workspace_path <path_to_workspace_file.txt>
+
+Dependencies:
+    - libclang: Python bindings for Clang's C API
+    - Standard library: argparse, pathlib, json, typing
+
+"""
 
 import clang.cindex
 from clang.cindex import Cursor, CursorKind
@@ -7,6 +33,21 @@ import json
 from typing import List, Dict, Self, Tuple
 
 class Arguments:
+    """Builder pattern for constructing command-line arguments.
+
+    This class provides a fluent interface for building argparse configuration.
+    It allows selective addition of command-line arguments through chained method calls.
+
+    Attributes:
+        arguments (Dict[str, bool]): Dictionary tracking which arguments to include
+
+    Example:
+        args = Arguments() \\
+            .with_manifest_file() \\
+            .with_validation() \\
+            .with_workspace_path() \\
+            .build()
+    """
     def __init__(self: Self) -> None:
         self.arguments = {}
 
@@ -50,7 +91,44 @@ class Arguments:
         return parser.parse_args()
 
 class SymbolChecker:
+    """Detects One Definition Rule (ODR) violations in C/C++ code.
+
+    This class uses libclang to parse C/C++ source files and extract symbol definitions.
+    It maintains a registry of all seen symbols and detects when the same symbol is
+    defined in multiple translation units, which violates the ODR.
+
+    Attributes:
+        manifest (Path): Path to the JSON manifest file with compilation info
+        validation_file (Path): Path to the output file for violation reports
+        workspace_path (Path): Absolute path to the Bazel workspace root
+        data (Dict): Parsed manifest data (sources, includes, args, defines)
+        index (clang.cindex.Index): Libclang index for parsing translation units
+        symbols (Dict[str, Tuple[CursorKind, str]]): Registry of seen symbols
+        errors (List[str]): List of ODR violation error messages
+
+    The ODR states that:
+        - Each translation unit can have at most one definition of any symbol
+        - If a symbol appears in multiple translation units, all definitions must be identical
+    """
+
     def __init__(self: Self, manifest: Path, validation_file: Path, workspace_path: Path) -> None:
+        """Initialize the SymbolChecker with input files.
+
+        Args:
+            manifest: Path to JSON manifest file containing compilation information
+            validation_file: Path where validation results will be written
+            workspace_path: Path to file containing workspace root path
+            
+        Raises:
+            FileNotFoundError: If manifest or workspace_path file doesn't exist
+            
+        Side Effects:
+            - Deletes existing validation_file if present
+            - Reads workspace path from workspace_path file
+            - Loads and parses manifest JSON
+            - Creates libclang Index
+            - Processes include paths
+        """
         if not manifest.exists():
             raise FileNotFoundError(f"Manifest file {manifest} does not exist.")
         if not workspace_path.exists():
@@ -66,18 +144,25 @@ class SymbolChecker:
             self.data = json.load(f)
         self.index = clang.cindex.Index.create()
         self.symbols: Dict[str, Tuple[CursorKind, str]] = {}
-        self.errors: List[str] = []
+        self.error_list: List[str] = []
 
         self.process_includes()
 
     def process_includes(self: Self) -> None:
+        """Process and normalize include paths for compilation.
+
+        Converts relative include paths from the manifest to absolute paths
+        by prepending the workspace path. Adds -I prefix for compiler not compatibility.
+        """
+
         self.data["includes"] = [f"{self.workspace_path / inc}" for inc in self.data.get("includes", [])]
         self.data["includes"].append(f"-I{self.workspace_path}")
 
         t = [f"-I{self.workspace_path / f}" for f in self.data.get("framework_includes", [])]
         self.data["includes"].extend(t)
 
-        print(self.data["includes"])
+        self.data["srcs"] = list(filter(lambda x: not x.endswith(('.h', '.hpp', '.hxx')), self.data.get("srcs", [])))
+
 
     @staticmethod
     def get_fully_qualified_name(cursor: Cursor) -> str:
@@ -91,12 +176,25 @@ class SymbolChecker:
         return cursor.spelling
 
     def collect_definitions(self: Self, tupath: str, args: List[str]) -> List[Tuple[str, CursorKind, str, str]]:
+        """Parse a translation unit and collect all symbol definitions.
+
+        Uses libclang to parse a C/C++ source file and traverse its AST,
+        collecting information about all defined symbols.
+
+        Args:
+            tupath: Path to the source file to parse
+            args: Compiler arguments (includes, defines, flags)
+
+        Returns:
+            List of tuples, each containing:
+                - Fully qualified symbol name (str)
+                - Symbol kind (CursorKind) - function, class, variable, etc.
+                - File path where defined (str)
+                - Line number where defined (int)
+        """
         tu = self.index.parse(tupath, args=args)
         # print(f"AST for {tupath}:")
         # SymbolChecker.print_ast(tu.cursor)
-        print(f"-------------Errors for {tupath}-------------")
-        SymbolChecker.print_errors(tu.diagnostics)
-        print("----------------------------------------------")
         definitions = []
 
         def visit(node):
@@ -111,11 +209,26 @@ class SymbolChecker:
         visit(tu.cursor)
 
         if tu.diagnostics:
+            print(f"-------------Errors for {tupath}-------------")
             SymbolChecker.print_errors(tu.diagnostics)
+            print("----------------------------------------------")
 
         return definitions
 
     def validate(self: Self) -> None:
+        """Validate symbols across all source files and detect ODR violations.
+
+        Main validation logic that:
+        1. Combines compiler arguments from manifest
+        2. Parses each source file to collect symbols
+        3. Compares against previously seen symbols
+        4. Records ODR violations when duplicates are found
+        5. Writes validation report
+
+        ODR Violation Detection:
+            If a symbol name is seen twice with the same fully qualified name,
+            it's flagged as a potential ODR violation (unless it's a namespace).
+        """
         args = self.data["args"] + self.data["includes"] + self.data["defines"]
         srcs = self.data["srcs"]
         print(f"Processing {self.data['tgt']} ...")
@@ -126,7 +239,7 @@ class SymbolChecker:
             for name, kind, file, line in symbols:
                 if name in self.symbols:
                     err = (
-                        f"ODR violation? Symbol '{name}' of kind '{kind.name}' defined in both {self.sybmls[name]} and {file}:{line} {kind}"
+                        f"ODR violation? Symbol '{name}' of kind '{kind.name}' defined in both {self.symbols[name]} and {file}:{line} {kind}"
                     )
                     print(err)
                     self.error_list.append(err)
