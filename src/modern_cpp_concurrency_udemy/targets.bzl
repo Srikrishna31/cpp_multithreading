@@ -15,6 +15,8 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "livelock.cpp",
     "lock_free_queue.cpp",
     "new_parallel_algorithms.cpp",
+    "monitor_naive.cpp",
+    "monitor_wrapper.cpp",
     "packaged_task_ex.cpp",
     "parallel_algorithms.cpp",
     "shared_pointer.cpp",
