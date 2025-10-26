@@ -3,4 +3,4 @@ load(":targets.bzl", "modern_cpp_concurrency_udemy_binary_target_list")
 
 package(default_visibility = ["//visibility:public"])
 
-generate_cc_binary_targets(modern_cpp_concurrency_udemy_binary_target_list)
+generate_cc_binary_targets(modern_cpp_concurrency_udemy_binary_target_list, headers = ["concurrent_queue.h"])

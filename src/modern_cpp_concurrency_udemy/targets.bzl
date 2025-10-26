@@ -2,6 +2,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "async_example.cpp",
     "atomic_double_checked_locking.cpp",
     "atomic_flag_spin_lock.cpp",
+    "concurrent_queue_test.cpp",
     "condition_variables.cpp",
     "cv_thread_coordination.cpp",
     "data_race.cpp",
