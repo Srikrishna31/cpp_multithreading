@@ -47,7 +47,7 @@
  #include <functional>
 
  // All the task functions will have this type.
- using Func = std::function<void>();
+ using Func = std::function<void()>;
 
  class thread_pool {
      // Queue of task functions

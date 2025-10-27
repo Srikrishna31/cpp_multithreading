@@ -5,7 +5,7 @@ thread_pool::thread_pool() {
     auto thread_count = std::thread::hardware_concurrency() - 1;
     std::cout << "Creating a thread pool with " << thread_count << " threads." << std::endl;
 
-    for (int i = 0; i < thread_count; ++i) {
+    for (decltype(thread_count) i = 0; i < thread_count; ++i) {
         threads.push_back(std::thread{&thread_pool::worker, this});
     }
 }
