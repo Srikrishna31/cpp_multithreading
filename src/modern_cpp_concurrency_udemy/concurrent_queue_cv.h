@@ -19,7 +19,7 @@ using namespace std::literals;
  */
 template<typename T>
 class concurrent_queue_cv {
-    std::mutex mut;
+    mutable std::mutex mut;
     std::queue<T> que;
     std::condition_variable cond_var;
     int max{50};
@@ -53,5 +53,10 @@ public:
 
         value = std::move(que.front());
         que.pop();
+    }
+
+    auto empty() const -> bool {
+        std::lock_guard<std::mutex> lck{mut};
+        return que.empty();
     }
 };

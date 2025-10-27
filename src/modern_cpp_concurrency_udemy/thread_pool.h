@@ -59,10 +59,16 @@
      // Entry point function for the threads
      auto worker() -> void;
 
+     bool exit_requested = false;
+
 public:
     thread_pool();
     ~thread_pool();
 
     // Add a task to the queue.
     auto submit(Func func) -> void;
+
+    // Exit the thread pool
+    auto exit(bool exit) -> void;
+
  };

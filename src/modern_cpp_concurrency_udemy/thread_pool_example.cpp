@@ -22,5 +22,8 @@ auto main() -> int {
         std::cout << "All tasks finished" << std::endl;
     });
 
+    std::this_thread::sleep_for(5s);
+    pool.exit(true);
+
     return 0;
 }

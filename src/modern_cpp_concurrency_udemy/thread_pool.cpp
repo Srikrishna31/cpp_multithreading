@@ -17,15 +17,27 @@ thread_pool::~thread_pool() {
 }
 
 auto thread_pool::worker() -> void {
-    while (true) {
+    while (!exit_requested) {
         Func task;
 
         work_queue.pop(task);
 
         task();
     }
+    if (exit_requested) {
+        while (!work_queue.empty()) {
+            Func task;
+            work_queue.pop(task);
+            task();
+        }
+    }
+    std::cout << "Shutting down thread pool." << std::endl;
 }
 
 auto thread_pool::submit(Func func) -> void {
     work_queue.push(std::move(func));
+}
+
+auto thread_pool::exit(bool exit) -> void {
+    exit_requested = exit;
 }
