@@ -27,6 +27,7 @@ modern_cpp_concurrency_udemy_binary_target_list = [
     "standard_algorithms.cpp",
     "thread_coordination_mutexes.cpp",
     "thread_fizzbuzz.cpp",
-    "thread_local_example.cpp",
     "threaded_integer_ops.cpp",
+    "thread_local_example.cpp",
+    "thread_pool_example.cpp",
 ]

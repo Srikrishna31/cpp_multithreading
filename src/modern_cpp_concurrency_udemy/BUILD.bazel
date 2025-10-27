@@ -5,4 +5,6 @@ package(default_visibility = ["//visibility:public"])
 
 generate_cc_binary_targets(modern_cpp_concurrency_udemy_binary_target_list,
                             headers = ["concurrent_queue.h",
-                                "concurrent_queue_cv.h"])
+                                "concurrent_queue_cv.h",
+                                "thread_pool.h",
+                                "thread_pool.cpp"])
