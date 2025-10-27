@@ -77,3 +77,8 @@ check_symbols(
     name = "odr_check_symbols",
     target = ":odr_check",
 )
+
+alias (
+    name = "odr",
+    actual = "//src/odr",
+)
