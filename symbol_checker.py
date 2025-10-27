@@ -153,9 +153,9 @@ class SymbolChecker:
         self.symbols: Dict[str, Tuple[CursorKind, str]] = {}
         self.error_list: List[str] = []
 
-        self.process_includes()
+        self.pre_process_data()
 
-    def process_includes(self: Self) -> None:
+    def pre_process_data(self: Self) -> None:
         """Process and normalize include paths for compilation.
 
         Converts relative include paths from the manifest to absolute paths
@@ -185,7 +185,7 @@ class SymbolChecker:
         if cursor is None or cursor.kind == CursorKind.TRANSLATION_UNIT:
             return ""
         else:
-            res = SymbolChecker.get_fully_qualified_name(c.semantic_parent)
+            res = SymbolChecker.get_fully_qualified_name(cursor.semantic_parent)
             if res != "":
                 return f"{res}::{cursor.spelling}"
 
@@ -304,4 +304,7 @@ def main():
 
 
 if __name__ == "__main__":
+    import os
+
+    print(os.getcwd())
     main()

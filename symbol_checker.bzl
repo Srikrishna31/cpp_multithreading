@@ -168,6 +168,23 @@ def _symbol_checker_impl(ctx):
         },
     )
 
+    # Create a simple shell script to let the symbol checker script run.
+    wrapper = ctx.actions.declare_file(ctx.label.name)
+    ctx.actions.write(
+        output = wrapper,
+        content = """
+        #!/bin/bash
+        python3 "{script}" "{args}" "@"
+        """.format(
+            script = ctx.executable._generator.path,
+            args = " ".join([
+                "'%s'" % arg.replace("'", "'\\''")
+                for arg in ctx.attr.args
+            ]),
+        ),
+        is_executable = True,
+    )
+
     outputs = [ctx.actions.declare_file("{}_validation.txt".format(ctx.attr.name))]
 
     ctx.actions.run(
@@ -181,6 +198,7 @@ def _symbol_checker_impl(ctx):
     return [
         DefaultInfo(
             files = depset(outputs),
+            executable = wrapper,
         ),
     ]
 
@@ -209,6 +227,7 @@ check_symbols = rule(
             """,        ),
     },
     outputs = {"validation": "%{name}_validation.txt"},
+    executable = True,
     doc = """A rule to check for symbol conflicts in C/C++ targets.
 
     This rule detects One Definition Rule (ODR) violations by analyzing
