@@ -9,4 +9,6 @@ generate_cc_binary_targets(modern_cpp_concurrency_udemy_binary_target_list,
                                 "thread_pool.h",
                                 "thread_pool.cpp",
                                 "thread_pool_multi_queue.h",
-                                "thread_pool_multi_queue.cpp"])
+                                "thread_pool_multi_queue.cpp",
+                                "thread_pool_cycle_stealing.h",
+                                "thread_pool_cycle_stealing.cpp"])

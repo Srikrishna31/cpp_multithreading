@@ -1,5 +1,6 @@
 #include "thread_pool.h"
 #include "thread_pool_multi_queue.h"
+#include "thread_pool_cycle_stealing.h"
 #include <iostream>
 #include <chrono>
 
@@ -18,7 +19,8 @@ void task2() {
 }
 auto main() -> int {
     // thread_pool pool;
-    thread_pool_multi_queue pool;
+    // thread_pool_multi_queue pool;
+    thread_pool_cycle_stealing pool;
 
     pool.submit(task2);
     for (int i = 0; i < 200; ++i) {

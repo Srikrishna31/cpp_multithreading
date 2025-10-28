@@ -19,9 +19,9 @@ using namespace std::literals;
  */
 template<typename T>
 class concurrent_queue_cv {
-    mutable std::mutex mut;
+    mutable std::timed_mutex mut;
     std::queue<T> que;
-    std::condition_variable cond_var;
+    std::condition_variable_any cond_var;
     int max{50};
 public:
     concurrent_queue_cv() = default;
@@ -33,7 +33,7 @@ public:
     concurrent_queue_cv& operator=(concurrent_queue_cv&&) = delete;
 
     auto push(T value) -> void {
-        std::unique_lock<std::mutex> uniq_lck(mut);
+        std::unique_lock<std::timed_mutex> uniq_lck(mut, std::try_to_lock);
 
         while(que.size() > max) {
             uniq_lck.unlock();
@@ -47,7 +47,7 @@ public:
     }
 
     auto pop(T& value) -> void {
-        std::unique_lock<std::mutex> uniq_lck(mut);
+        std::unique_lock<std::timed_mutex> uniq_lck(mut, std::try_to_lock);
 
         cond_var.wait(uniq_lck, [this]{return !que.empty();});
 
@@ -56,7 +56,31 @@ public:
     }
 
     auto empty() const -> bool {
-        std::lock_guard<std::mutex> lck{mut};
+        std::lock_guard<std::timed_mutex> lck{mut};
         return que.empty();
+    }
+
+    auto try_push(T value) -> bool {
+        auto lck_guard = std::unique_lock<std::timed_mutex>{mut, std::defer_lock};
+
+        if (!lck_guard.try_lock_for(1ms) || que.size() > max) {
+            return false;
+        }
+
+        que.push(value);
+        cond_var.notify_one();
+        return true;
+    }
+
+    auto try_pop(T& value) -> bool {
+        auto lck_guard = std::unique_lock<std::timed_mutex>{mut, std::defer_lock};
+
+        if (!lck_guard.try_lock_for(1ms) || que.empty()) {
+            return false;
+        }
+
+        value = std::move(que.front());
+        que.pop();
+        return true;
     }
 };
