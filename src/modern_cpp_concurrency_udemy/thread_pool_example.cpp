@@ -1,4 +1,5 @@
 #include "thread_pool.h"
+#include "thread_pool_multi_queue.h"
 #include <iostream>
 #include <chrono>
 
@@ -11,7 +12,8 @@ auto task() -> void {
 }
 
 auto main() -> int {
-    thread_pool pool;
+    // thread_pool pool;
+    thread_pool_multi_queue pool;
 
     for (int i = 0; i < 20; ++i) {
         pool.submit(task);
@@ -23,7 +25,7 @@ auto main() -> int {
     });
 
     std::this_thread::sleep_for(5s);
-    pool.exit(true);
+    // pool.exit(true);
 
     return 0;
 }
