@@ -31,3 +31,6 @@ pip.parse(
     requirements_lock = "//:requirements.txt",
 )
 use_repo(pip, "pip")
+
+load_conan_dependencies = use_extension("//src/conan_demo/conan:conan_deps_module_extension.bzl", "conan_extension")
+use_repo(load_conan_dependencies, "fmt")

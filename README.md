@@ -2,7 +2,7 @@
 A repository that contains code snippets from the book: C++ Concurrency in Action.
 
 # TODO
-1. Create a bazel architecture diagram. 
+1. Create a bazel architecture diagram.
 2. Explain the functions in convenience_def.bzl, targets.bzl in each bazel package.
 3. Define a workflow for adding a new bazel package.
 4. Define a workflow for adding a new file to an existing bazel package.
@@ -226,7 +226,7 @@ cpp_multithreading/
 ```
 
 # 🏛️ Bazel Architecture
-This project uses a sophisticated Bazel build architecture leveraging modern Bzlmod, custom rules, and aspects for 
+This project uses a sophisticated Bazel build architecture leveraging modern Bzlmod, custom rules, and aspects for
 advanced build capabilities.
 
 ## Overview
@@ -246,8 +246,8 @@ advanced build capabilities.
 │  - Global visibility rules                                  │
 └─────────────────────────────────────────────────────────────┘
                             │
-                            ▼ 
-                            
+                            ▼
+
 ┌─────────────────────────────────────────────────────────────┐
 │                   Custom Bazel Rules                        │
 │  ┌──────────────────────────────────────────────────────┐   │
@@ -610,13 +610,13 @@ The symbol checker:
 
 ## 🧰 Bazel Configuration
 ### Custom Build Rules
-- [check_symbols](symbol_checker.bzl): ODR violation detection 
+- [check_symbols](symbol_checker.bzl): ODR violation detection
 - [source_aspect](symbol_checker.bzl): Compilation context collection
 
 ### Configuration Files
-- [.bazelrc](.bazelrc): Build configuration options 
-- [.bazelversion](.bazelversion): Specifies Bazel version 
-- [MODULE.bazel](MODULE.bazel): External dependencies (googletest, rules_python) 
+- [.bazelrc](.bazelrc): Build configuration options
+- [.bazelversion](.bazelversion): Specifies Bazel version
+- [MODULE.bazel](MODULE.bazel): External dependencies (googletest, rules_python)
 
 ## 🐛 Troubleshooting
 ### Windows-Specific Issues
@@ -636,7 +636,7 @@ pip install libclang
 
 ```powershell
 # Run as Administrator
-New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force 
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
 ```
 
 Or add to : `.bazelrc`
@@ -719,6 +719,23 @@ This project includes examples from various sources including:
 - M1/M2 (ARM) chips may show different behavior due to architecture differences
 - Performance characteristics differ from x86_64
 
+
+## 📦 Dependencies
+### Conan
+- fmt:fmt
+
+To setup Conan dependencies, run:
+```shell
+bazel run //src/conan_demo:setup_conan
+```
+For the first time, you have to run the setup script manually.
+```shell
+conan install ./src/conan_demo/ --build=missing
+```
+then you can run the examples:
+```shell
+bazel run //src/conan_demo:demo
+```
 ## 📧 Contact
 For questions or issues, please open a GitHub issue.
 **Happy Concurrent Programming!** 🚀

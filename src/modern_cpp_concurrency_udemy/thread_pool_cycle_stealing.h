@@ -23,7 +23,7 @@
  *          - Choose another thread's queue at random.
  *          - If there is a task on that queue, pop it and execute it.
  *          - Otherwise, choose a different thread's queue at random.
- *          - Contiue until it finds a task to perform.
+ *          - Continue until it finds a task to perform.
  *      * If all queues are empty, pause for a while, and then repeat the process.
  */
 #include "concurrent_queue_cv.h"
