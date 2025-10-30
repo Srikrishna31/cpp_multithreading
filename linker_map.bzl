@@ -13,10 +13,11 @@ def _collect_files(linker_inputs):
     res = []
     for input in linker_inputs:
         for lib in input.libraries:
-            res.extend([obj.path for obj in lib.objects])
-            res.extend([lib.path for lib in lib.libraries])
-            res.extend([dlib.path for dlib in lib.dynamic_libraries])
-            res.extend([slib.path for slib in lib.static_libraries])
+            res.extend([object for object in lib.objects if object != None])
+            if hasattr(lib, "dynamic_library") and lib.dynamic_library != None:
+                res.append(lib.dynamic_library)
+            if hasattr(lib, "static_library") and lib.static_library != None:
+                res.append(lib.static_library)
 
         # res.extend(input.objects)
         # res.extend(input.libraries)
@@ -35,21 +36,31 @@ def _map_file_aspect_impl(target, ctx):
     map_file = ctx.actions.declare_file(ctx.label.name + ".map")
 
     toolchain = ctx.toolchains["@bazel_tools//tools/cpp:toolchain_type"]
-    linker_path = toolchain.cc.ld_executable
+    input_files = _collect_files(linker_inputs)
 
     print("Generating linker map file for {}".format(map_file.path))
-    print("Input files: {}".format([f.path for f in linker_inputs]))
-    print("Collecting files: {}".format(_collect_files(linker_inputs)))
+    # print("Input files: {}".format([f.path for f in linker_inputs]))
 
-    ctx.actions.run_shell(
+    print("Collecting files: {}".format([f.path for f in input_files]))
+
+    # ctx.actions.run_shell(
+    #     outputs = [map_file],
+    #     inputs = depset(input_files),
+    #     command = "{} -shared -o /dev/null -Map={} {}".format(
+    #         linker_path,
+    #         map_file.path,
+    #         # " ".join([f.path for f in linker_inputs])
+    #         " ".join([f.path for f in input_files])
+    #     ),
+    #     mnemonic = "GenerateLinkerMap",
+    #     progress_message = "Generating linker map file for {}".format(target.label),
+    # )
+
+    ctx.actions.run(
         outputs = [map_file],
-        inputs = depset(linker_inputs),
-        command = "{} -shared -o /dev/null -Map={} {}".format(
-            linker_path,
-            map_file.path,
-            " ".join([f.path for f in linker_inputs])
-            # " ".join([_collect_files(linker_inputs)]
-        ),
+        inputs = depset(input_files),
+        executable = toolchain.cc.ld_executable,
+        arguments = ["-shared", "-o", "/dev/null", "-Map", map_file.path, " ".join([f.path for f in input_files])],
         mnemonic = "GenerateLinkerMap",
         progress_message = "Generating linker map file for {}".format(target.label),
     )
