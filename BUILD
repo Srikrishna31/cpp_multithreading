@@ -82,3 +82,8 @@ alias (
     name = "odr",
     actual = "//src/odr",
 )
+
+alias (
+    name = "logger",
+    actual = "//src/logger",
+)

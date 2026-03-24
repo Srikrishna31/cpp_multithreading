@@ -1,0 +1,33 @@
+load("@//:config.bzl", "package_copt")
+
+package(default_visibility = ["//visibility:public"])
+
+config_setting(
+    name = "log_debug",
+    values = {"define": "LOG_LEVEL=DEBUG"},
+)
+
+config_setting(
+    name = "log_info",
+    values = {"define": "LOG_LEVEL=INFO"},
+)
+
+config_setting(
+    name = "log_warn",
+    values = {"define": "LOG_LEVEL=WARN"},
+)
+
+config_setting(
+    name = "log_error",
+    values = {"define": "LOG_LEVEL=ERROR"},
+)
+
+cc_library(
+    name = "logger",
+    srcs = ["logger.cpp"],
+    hdrs = [
+        "log.h",
+        "logger.h",
+    ],
+    copts = package_copt,
+)

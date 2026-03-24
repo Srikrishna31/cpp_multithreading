@@ -38,5 +38,4 @@ class spinlock {
 };
 
 
-
 #endif //SPINLOCK_H
