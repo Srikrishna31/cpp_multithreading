@@ -1,5 +1,6 @@
 load("@//:config.bzl", "package_copt")
 load("@rules_cc//cc:defs.bzl", "cc_library")
+#load("@//:prelude.bzl", "cc_library")
 
 package(default_visibility = ["//visibility:public"])
 
