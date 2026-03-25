@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <memory>
-
+#include <cstring>
 
 
 namespace aeva::safe::logger {
@@ -129,11 +129,13 @@ class Logger {
 
   static void shutdown();
 
- private:
-  Logger();
   ~Logger();
 
+ private:
+  Logger();
+
   std::unique_ptr<LogQueue> queue;
+  static std::unique_ptr<Logger> instance_;
   const char* logger_name;
 };
 

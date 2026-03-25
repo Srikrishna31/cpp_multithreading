@@ -7,21 +7,23 @@
 
 namespace aeva::safe::logger {
 
-    static std::unique_ptr<Logger> static_logger;
-
     class LogQueue {
 
     };
 
-    void Logger::init(const char* logger_name) {
-        static_logger = Logger(logger_name);
+    void Logger::init(const char* logger_name) noexcept {
+        instance_ = std::unique_ptr<Logger>(new Logger());
     }
 
-    Logger::Logger() {
+    Logger::Logger() = default;
+
+    Logger::~Logger()
+    {
 
     }
+
     Logger& Logger::instance() {
-        return logger;
+        return *instance_;
     }
 
     void Logger::log(LogLevel level, const char* message) {
