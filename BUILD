@@ -1,6 +1,8 @@
 load("@//:config.bzl", "package_copt")
 load("@//:convenience_def.bzl", "generate_alias_targets")
+load("@rules_python//python:defs.bzl", "py_binary")
 load("@//src/atomic:targets.bzl", "atomic_binary_target_list")
+load("@rules_cc//cc:defs.bzl", "cc_test")
 load("@//src/modern_cpp_concurrency_udemy:targets.bzl", "modern_cpp_concurrency_udemy_binary_target_list")
 load("@//src/synchronizing_concurrent_operations:targets.bzl", "sync_concurrent_op_binary_target_list")
 load(":symbol_checker.bzl", "check_symbols")

@@ -18,6 +18,7 @@ Usage:
         target = "//src/atomic:spinlock",
     )
 """
+load("@rules_cc//cc/common:cc_info.bzl", "CcInfo")
 
 VALIDATOR = "symbol_checker_binary"
 
