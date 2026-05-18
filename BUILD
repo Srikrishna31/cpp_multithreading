@@ -89,3 +89,8 @@ alias (
     name = "logger",
     actual = "//src/logger",
 )
+
+alias (
+    name = "getlastof",
+    actual = "//src:getlastof"
+)

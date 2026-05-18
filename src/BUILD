@@ -1,4 +1,5 @@
 load("@//:config.bzl", "package_copt")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
     name = "timer",
@@ -7,4 +8,11 @@ cc_library(
     copts = package_copt,
     visibility = ["//visibility:public"],
     deps = [],
+)
+
+cc_binary(
+    name="getlastof",
+    srcs=["get_last_of.cpp"],
+    copts=package_copt,
+    visibility = ["//visibility:public"]
 )

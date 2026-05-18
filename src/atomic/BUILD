@@ -16,4 +16,7 @@ cc_library(
     ],
     copts = package_copt,
     strip_include_prefix = "//include/atomic",
+    deps = [
+        "//:logger"
+    ]
 )
