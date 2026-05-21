@@ -1,6 +1,8 @@
 load("@//:config.bzl", "package_copt")
 load("@//:convenience_def.bzl", "generate_cc_binary_targets")
 load(":targets.bzl", "atomic_binary_target_list")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
 
 package(default_visibility = ["//visibility:public"])
 

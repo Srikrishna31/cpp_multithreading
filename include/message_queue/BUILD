@@ -1,4 +1,5 @@
 load("@//:config.bzl", "package_copt")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
 cc_library(
     name = "message_queue",
