@@ -10,14 +10,12 @@ cc_library(
     deps = [],
 )
 
-<<<<<<< HEAD
 cc_binary(
     name="getlastof",
     srcs=["get_last_of.cpp"],
     copts=package_copt,
     visibility = ["//visibility:public"]
 )
-=======
 cc_library(
     name = "result",
     hdrs = ["result.h"],
@@ -25,4 +23,3 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [],
 )
->>>>>>> e828ad9 (Add a result type class similar to the one that exists in Rust)

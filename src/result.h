@@ -3,6 +3,40 @@
 #include <stdexcept>
 #include <utility>
 
+enum class ResultErrorCode : uint8_t {
+  ResultInSuccessState = 0,
+  ResultInFailureState,
+};
+
+constexpr const char* to_string(ResultErrorCode code) noexcept {
+  switch (code) {
+    case ResultErrorCode::ResultInSuccessState:
+      return "Result in success state, but requested error value";
+    case ResultErrorCode::ResultInFailureState:
+      return "Result in failure state, but requested success value";
+    default:
+      return "Unknown error";
+  }
+}
+
+class ResultException : public std::exception {
+  public:
+    explicit ResultException(ResultErrorCode code)
+      : code_(code) 
+    {}
+
+    ResultErrorCode code() const noexcept 
+    {
+      return code_;
+    }
+
+    const char* what() const noexcept override {
+      return to_string(code_);
+    }
+
+  private:
+    ResultErrorCode code_;
+};
 template <typename T, typename E> class Result {
 public:
   static Result Success(T value) { return Result(std::move(value)); }
@@ -15,14 +49,14 @@ public:
   // Safe accessors with state validation (ASIL-B: defensive programming)
   const T &Value() const {
     if (!_isSuccess) {
-      throw std::runtime_error("Result is in failure state");
+      throw ResultException(ResultErrorCode::ResultInFailureState);
     }
     return _storage._value;
   }
 
   const E &Error() const {
     if (_isSuccess) {
-      throw std::runtime_error("Result is in success state");
+      throw ResultException(ResultErrorCode::ResultInSuccessState);
     }
     return _storage._error;
   }
