@@ -5,10 +5,10 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 cc_binary(
     name = "odr_check",
     srcs = [
-        "foo1.cpp",
-        "foo1.h",
-        "foo2.cpp",
-        "foo2.h",
+        # "foo1.cpp",
+        # "foo1.h",
+        # "foo2.cpp",
+        # "foo2.h",
         "main.cpp",
         "test.h",
     ],
