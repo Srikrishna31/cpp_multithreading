@@ -23,3 +23,10 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [],
 )
+
+cc_binary(
+    name = "monadic_compile_check",
+    srcs = ["monadic_compile_check.cpp"],
+    copts = package_copt,
+    deps = [":result"],
+)
