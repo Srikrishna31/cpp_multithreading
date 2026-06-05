@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <initializer_list>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -55,6 +56,28 @@ public:
 
   static Result Failure(E error) {
     return Result(FailureTag{}, std::move(error));
+  }
+
+  template <typename... Args>
+  static Result SuccessInPlace(Args &&...args) {
+    return Result(SuccessTag{}, std::forward<Args>(args)...);
+  }
+
+  template <typename U, typename... Args>
+  static Result SuccessInPlace(std::initializer_list<U> values,
+                               Args &&...args) {
+    return Result(SuccessTag{}, values, std::forward<Args>(args)...);
+  }
+
+  template <typename... Args>
+  static Result FailureInPlace(Args &&...args) {
+    return Result(FailureTag{}, std::forward<Args>(args)...);
+  }
+
+  template <typename U, typename... Args>
+  static Result FailureInPlace(std::initializer_list<U> values,
+                               Args &&...args) {
+    return Result(FailureTag{}, values, std::forward<Args>(args)...);
   }
 
   bool isSuccess() const noexcept { return _isSuccess; }
@@ -239,11 +262,25 @@ public:
   }
 
 private:
-  Result(SuccessTag, T value)
-      : _isSuccess(true), _storage(SuccessTag{}, std::move(value)) {}
+  template <typename... Args>
+  Result(SuccessTag, Args &&...args)
+      : _isSuccess(true),
+        _storage(SuccessTag{}, std::forward<Args>(args)...) {}
 
-  Result(FailureTag, E error)
-      : _isSuccess(false), _storage(FailureTag{}, std::move(error)) {}
+  template <typename U, typename... Args>
+  Result(SuccessTag, std::initializer_list<U> values, Args &&...args)
+      : _isSuccess(true),
+        _storage(SuccessTag{}, values, std::forward<Args>(args)...) {}
+
+  template <typename... Args>
+  Result(FailureTag, Args &&...args)
+      : _isSuccess(false),
+        _storage(FailureTag{}, std::forward<Args>(args)...) {}
+
+  template <typename U, typename... Args>
+  Result(FailureTag, std::initializer_list<U> values, Args &&...args)
+      : _isSuccess(false),
+        _storage(FailureTag{}, values, std::forward<Args>(args)...) {}
 
   bool _isSuccess;
   union Storage {
@@ -251,8 +288,23 @@ private:
     E _error;
 
     Storage() {}
-    Storage(SuccessTag, T value) : _value(std::move(value)) {}
-    Storage(FailureTag, E error) : _error(std::move(error)) {}
+
+    template <typename... Args>
+    Storage(SuccessTag, Args &&...args)
+        : _value(std::forward<Args>(args)...) {}
+
+    template <typename U, typename... Args>
+    Storage(SuccessTag, std::initializer_list<U> values, Args &&...args)
+        : _value(values, std::forward<Args>(args)...) {}
+
+    template <typename... Args>
+    Storage(FailureTag, Args &&...args)
+        : _error(std::forward<Args>(args)...) {}
+
+    template <typename U, typename... Args>
+    Storage(FailureTag, std::initializer_list<U> values, Args &&...args)
+        : _error(values, std::forward<Args>(args)...) {}
+
     ~Storage() {}
   } _storage;
 };
