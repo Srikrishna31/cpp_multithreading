@@ -19,6 +19,18 @@ cc_test(
     ],
 )
 
+cc_test(
+    name = "test_result",
+    srcs = ["test/test_result.cpp"],
+    copts = package_copt,
+    tags = ["unit"],
+    visibility = ["//visibility:private"],
+    deps = [
+        "//src:result",
+        "@gtest",
+    ],
+)
+
 generate_alias_targets(
     atomic_binary_target_list,
     "//src/atomic",
